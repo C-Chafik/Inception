@@ -1,0 +1,9 @@
+version: 3
+services:
+  nginx:
+    image: requirements/nginx
+    ports:
+      - 443:443
+    networks:
+      - Inception
+
