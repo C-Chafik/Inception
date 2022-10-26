@@ -7,7 +7,7 @@ service mysql start
 # SO WE WILL SETUP THE DATA BASE MANUALLY IN PRETTY MUCH THE SAME WAY OF THE SCRIPT
 
 # MAKE SURE YOU CANNOT CONNECT TO THE DDB WIHTOUT A PASSWORD
-mysql -e "UPDATE mysql.user SET Password = PASSWORD('$DDB_PASSWD') WHERE User = 'root'"
+mysql -e "UPDATE mysql.user SET Password = PASSWORD('$MYSQL_ROOT_PASSWORD') WHERE User='root'"
 
 # DISALLOW REMOTE LOGIN FOR ROOT
 mysql -e "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1')"
