@@ -4,12 +4,14 @@ services:
     image: mariadb_inception
     restart: always
     ports:
-      - "3306:3306"
+      - 3306:3306
     volumes:
       - "mysql-log:/var/log/mysql"
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_ROOT_HOST: %
+      MYSQL_DDB_NAME: $MYSQL_DDB_NAME
+      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+      MYSQL_USER: $MYSQL_USER
+      MYSQL_PASSWORD: $MYSQL_PASSWORD
 
 volumes:
   mysql-log:
