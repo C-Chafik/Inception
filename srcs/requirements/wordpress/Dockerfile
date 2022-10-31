@@ -1,6 +1,17 @@
 FROM debian:buster
 
-# THIS CONTAINE WILL CONTAIN WORDPRESS AND EVERYTHING IT NEED TO RUN IT
+RUN 	apt-get -y update; \
+ 	apt-get -y upgrade; \
+	apt-get -y install  php php7.3-fpm php7.3-common php7.3-mysql php7.3-gmp php7.3-curl php7.3-intl php7.3-mbstring php7.3-xmlrpc \ 
+			    php7.3-cli php7.3-zip php7.3-soap php7.3-imap wget unzip;
 
-RUN 	apt-get -y update; apt-get -y wordpress php php-fpm	
-		
+
+COPY tools/script.sh /script.sh
+
+RUN chmod +x /script.sh
+
+EXPOSE 9000
+
+#ENTRYPOINT ["bash", "/script.sh"]
+
+#CMD ["php-fpm7.3", "-F"]
