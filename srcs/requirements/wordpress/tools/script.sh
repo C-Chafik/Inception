@@ -1,26 +1,33 @@
 #!/bin/bash
 
+while  ! mysqladmin ping -h localhost; 
+do
+	sleep 1;
+done
 
-mkdir -p /var/www/html
+if  ! wp core is-installed --allow-root; 
+then
 
-cd /var/www/html
+	mkdir -p /var/www/html/cmarouf.42.fr
 
-wget https://wordpress.org/latest.zip
+	cd /var/www/html/cmarouf.42.fr
 
-unzip latest.zip
+	wp core download --locale=fr_FR --allow-root
 
-rm latest.zip
-
-mv wordpress cmarouf.42.fr
-
-cd cmarouf.42.fr
-
-cp wp-config-sample.php wp-config.php
+	cp wp-config-sample.php wp-config.php
 
 	sed -i "s/define( 'DB_NAME', '.*' );/define( 'DB_NAME', '$MYSQL_DDB_NAME' );/" wp-config.php
 	sed -i "s/define( 'DB_PASSWORD', '.*' );/define( 'DB_PASSWORD', '$MYSQL_PASSWORD' );/" wp-config.php
 	sed -i "s/define( 'DB_USER', '.*' );/define( 'DB_USER', '$MYSQL_USER' );/" wp-config.php
 
-chown -R www-data:www-data /var/www/html/cmarouf.42.fr
+	chown -R www-data:www-data /var/www/html/cmarouf.42.fr
+
+	wp core install --url=cmarouf.42.fr --title=MyWordpress --admin_user=$WP_ADMIN_USER --admin_password=$WP_ADMIN_PASSWORD --allow-root
+	rm wp-config-sample.php
+
+	echo "OK"
+fi
 
 service php7.3-fpm start
+
+php-fpm7.3 -F

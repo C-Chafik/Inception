@@ -14,7 +14,6 @@ COPY conf /etc/nginx/sites-available/default
 
 # LISTEN TO DEFAULT AND HTTPS PORT
 
-EXPOSE 80
 EXPOSE 443
 
 # RUN THE SERVER

@@ -1,7 +1,8 @@
-version: "3.7"
+version: "3"
 services:
   mariadb:
     image: mariadb_inception
+    container_name: mariadb
     restart: always
     ports:
       - 3306:3306
@@ -12,3 +13,36 @@ services:
       MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
       MYSQL_USER: $MYSQL_USER
       MYSQL_PASSWORD: $MYSQL_PASSWORD
+    networks:
+      - backend
+  nginx:
+    image: nginx_inception
+    container_name: nginx
+    restart: always
+    ports:
+      - 443:443
+    networks:
+      - frontend
+  wordpress:
+    image: wordpress_inception
+    container_name: wordpress
+    depends_on: 
+     - mariadb
+       # restart: always
+    ports:
+      - 9000:9000
+    volumes:
+      - "/home/kika75/data:/var/www/html"
+    environment:
+      MYSQL_DDB_NAME: $MYSQL_DDB_NAME
+      MYSQL_USER: $MYSQL_USER
+      MYSQL_PASSWORD: $MYSQL_PASSWORD
+      WP_ADMIN_USER: $WP_ADMIN_USER
+      WP_ADMIN_PASSWORD: $WP_ADMIN_PASSWORD
+    networks:
+      - frontend
+      - backend
+
+networks:
+  backend:
+  frontend:
