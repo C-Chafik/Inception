@@ -1,9 +1,13 @@
 #!/bin/bash
 
-while  ! mysqladmin ping -h localhost; 
-do
-	sleep 1;
-done
+sleep 20
+
+#while  ! mysqladmin ping -h localhost -P 3306; 
+#do
+	#sleep 1;
+#done
+
+service php7.3-fpm start
 
 if  ! wp core is-installed --allow-root; 
 then
@@ -28,6 +32,4 @@ then
 	echo "OK"
 fi
 
-service php7.3-fpm start
-
-php-fpm7.3 -F
+exec "$@"
