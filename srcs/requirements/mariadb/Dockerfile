@@ -10,4 +10,6 @@ RUN chmod +x /script.sh
 
 EXPOSE 3306
 
-CMD ["bash", "/script.sh"]
+ENTRYPOINT ["bash", "/script.sh"]
+
+CMD ["mysqld_safe", "-F"]

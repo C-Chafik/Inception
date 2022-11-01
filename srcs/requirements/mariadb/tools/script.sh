@@ -6,9 +6,17 @@ if [ -d "/var/lib/mysql/$MYSQL_DDB_NAME" ]
 then
 	echo "The DDB is already installed"	
 else
+
 	mysql_install_db --user=mysql --datadir=/var/lib/mysql
 
 	service mysql start
+
+	mysqld_safe &
+
+	while ! mysqladmin ping
+	do
+		sleep 1
+	done
 
 	# THE '%' ALLOW REMOTE CONNECTION TO ALL HOST, AND LOCALHOST ONLY FROM THE DDB MACHINE
 
@@ -26,6 +34,8 @@ else
 
 	# Then we change root password
 	mysqladmin -u root password $MYSQL_ROOT_PASSWORD
+
+	mysqladmin -u root -p$MYSQL_ROOT_PASSWORD shutdown
 fi
 
-mysqld_safe
+exec "$@"
