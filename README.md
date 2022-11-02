@@ -1,56 +1,54 @@
 FROM debian:buster
 
-RUN     apt-get -y update; \
-        apt-get -y upgrade; \
-        apt-get -y install  php php7.3-fpm php7.3-common php7.3-mysql php7.3-gmp php7.3-curl php7.3-intl php7.3-mbstring php7.3-xmlrpc \
-                            php7.3-cli php7.3-zip php7.3-soap php7.3-imap wget unzip mariadb-client;
+RUN     apt-get update; \
+        apt-get install -y procps mariadb-client mariadb-server;
 
-RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-
-RUN chmod +x wp-cli.phar
-
-RUN mv wp-cli.phar /usr/local/bin/wp
-
-COPY tools/www.conf /etc/php/7.3/fpm/pool.d/www.conf
-
+COPY tools/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
 COPY tools/script.sh /script.sh
 
 RUN chmod +x /script.sh
 
-EXPOSE 9000
+EXPOSE 3306
 
 ENTRYPOINT ["bash", "/script.sh"]
 
-CMD ["php-fpm7.3", "-F"]
+CMD ["mysqld_safe", "-F"]
 
 
+#!/bin/bash
 
+#STARTING THE MYSQL SERVICE
 
-
-service php7.3-fpm start
-
-if  ! wp core is-installed --allow-root;
+if [ -d "/var/lib/mysql/$MYSQL_DDB_NAME" ]
 then
+        echo "The DDB is already installed"     
+else
 
-        mkdir -p /var/www/html/cmarouf.42.fr
+        mysql_install_db --user=mysql --datadir=/var/lib/mysql
 
-        cd /var/www/html/cmarouf.42.fr
+        /usr/share/mysql/mysql.server start
 
-        chown -R www-data:www-data /var/www/html/cmarouf.42.fr
+        chown mysql:mysql /usr/sbin/mysqld
 
-        wp core download --allow-root
+        #mysqld_safe &
 
-        cp wp-config-sample.php wp-config.php
+        # THE '%' ALLOW REMOTE CONNECTION TO ALL HOST, AND LOCALHOST ONLY FROM THE DDB MACHINE
 
-        sed -i "s/define( 'DB_NAME', '.*' );/define( 'DB_NAME', '$MYSQL_DDB_NAME' );/" wp-config.php
-        sed -i "s/define( 'DB_PASSWORD', '.*' );/define( 'DB_PASSWORD', '$MYSQL_PASSWORD' );/" wp-config.php
-        sed -i "s/define( 'DB_USER', '.*' );/define( 'DB_USER', '$MYSQL_USER' );/" wp-config.php
-        sed -i "s/define( 'DB_HOST', '.*' );/define( 'DB_HOST', 'mariadb' );/" wp-config.php
+        # We delete the 'anonymous user' so you cant connect with no username
+        mysql -e "DELETE FROM mysql.user WHERE User=''"
 
-        wp core install --url=cmarouf.42.fr --title=MyWordpress --admin_user=$WP_ADMIN_USER --admin_password=$WP_ADMIN_PASSWORD --allow-root
-        rm wp-config-sample.php
+        mysql -e "CREATE DATABASE IF NOT EXISTS $MYSQL_DDB_NAME;"
 
-        echo "OK"
+        mysql -e "CREATE USER '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';"
+
+        mysql -e "GRANT ALL PRIVILEGES ON $MYSQL_DDB_NAME.* TO '$MYSQL_USER'@'%';"
+
+        # We apply our changement before changing root password, otherwise the script wont be able to exec the remaining commands
+        mysql -e "FLUSH PRIVILEGES;"
+
+        # Then we change root password
+        mysqladmin -u root password $MYSQL_ROOT_PASSWORD
+
+        #mysqladmin -u root -p$MYSQL_ROOT_PASSWORD shutdown
 fi
 
-exec "$@"
