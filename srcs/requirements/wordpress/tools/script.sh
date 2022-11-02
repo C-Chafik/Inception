@@ -1,11 +1,9 @@
 #!/bin/bash
 
-sleep 20
-
-#while  ! mysqladmin ping -h localhost -P 3306; 
-#do
-	#sleep 1;
-#done
+until mysql --host=mariadb -u$MYSQL_USER -p$MYSQL_PASSWORD -e "\c"
+do
+	sleep 1;
+done
 
 service php7.3-fpm start
 
@@ -23,6 +21,10 @@ then
 	wp core install --url=cmarouf.42.fr --title=MyWordpress --admin_user=$WP_ADMIN_USER --admin_password=$WP_ADMIN_PASSWORD --admin_email=$WP_ADMIN_EMAIL --allow-root
 
 	echo "OK"
+
+	# It is indeed risky to setup wordpress as root, we we will set all of what wordpress installed as the user www-data so that the rserver is more secure
+
+	chown -R www-data:www-data /var/www/html/
 fi
 
 service php7.3-fpm stop
