@@ -1,7 +1,7 @@
 FROM debian:buster
 
 RUN 	apt-get update; \
-	apt-get install -y mariadb-client mariadb-server; 
+	apt-get install -y procps mariadb-client mariadb-server; 
 
 COPY tools/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
 COPY tools/script.sh /script.sh
@@ -12,4 +12,4 @@ EXPOSE 3306
 
 ENTRYPOINT ["bash", "/script.sh"]
 
-CMD ["mysqld_safe", "-F"]
+CMD ["mysqld"]

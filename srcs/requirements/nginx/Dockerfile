@@ -10,7 +10,7 @@ RUN 	apt-get -y update; \
 
 # IMPORTING NGINX CONFIG
 
-COPY conf /etc/nginx/sites-available/default
+COPY nginx.conf /etc/nginx/nginx.conf
 
 # LISTEN TO DEFAULT AND HTTPS PORT
 

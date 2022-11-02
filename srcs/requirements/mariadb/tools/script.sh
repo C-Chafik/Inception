@@ -9,14 +9,9 @@ else
 
 	mysql_install_db --user=mysql --datadir=/var/lib/mysql
 
-	service mysql start
+	/usr/share/mysql/mysql.server start
 
-	mysqld_safe &
-
-	while ! mysqladmin ping
-	do
-		sleep 1
-	done
+	chown mysql:mysql /usr/sbin/mysqld
 
 	# THE '%' ALLOW REMOTE CONNECTION TO ALL HOST, AND LOCALHOST ONLY FROM THE DDB MACHINE
 

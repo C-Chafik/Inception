@@ -9,27 +9,22 @@ sleep 20
 
 service php7.3-fpm start
 
-if  ! wp core is-installed --allow-root; 
+if  ! wp core is-installed --path=/var/www/html/cmarouf.42.fr --allow-root; 
 then
 
 	mkdir -p /var/www/html/cmarouf.42.fr
 
 	cd /var/www/html/cmarouf.42.fr
 
-	wp core download --locale=fr_FR --allow-root
+	wp core download --allow-root
 
-	cp wp-config-sample.php wp-config.php
+	wp config create --dbname=$MYSQL_DDB_NAME --dbuser=$MYSQL_USER --dbpass=$MYSQL_PASSWORD --locale=fr_FR --allow-root
 
-	sed -i "s/define( 'DB_NAME', '.*' );/define( 'DB_NAME', '$MYSQL_DDB_NAME' );/" wp-config.php
-	sed -i "s/define( 'DB_PASSWORD', '.*' );/define( 'DB_PASSWORD', '$MYSQL_PASSWORD' );/" wp-config.php
-	sed -i "s/define( 'DB_USER', '.*' );/define( 'DB_USER', '$MYSQL_USER' );/" wp-config.php
-
-	chown -R www-data:www-data /var/www/html/cmarouf.42.fr
-
-	wp core install --url=cmarouf.42.fr --title=MyWordpress --admin_user=$WP_ADMIN_USER --admin_password=$WP_ADMIN_PASSWORD --allow-root
-	rm wp-config-sample.php
+	wp core install --url=cmarouf.42.fr --title=MyWordpress --admin_user=$WP_ADMIN_USER --admin_password=$WP_ADMIN_PASSWORD --admin_email=$WP_ADMIN_EMAIL --allow-root
 
 	echo "OK"
 fi
+
+service php7.3-fpm stop
 
 exec "$@"
