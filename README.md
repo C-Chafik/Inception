@@ -1,41 +1,56 @@
-<?php
-/**
- * The base configuration for WordPress
- *
- * The wp-config.php creation script uses this file during the installation.
- * You don't have to use the web site, you can copy this file to "wp-config.php"
- * and fill in the values.
- *
- * This file contains the following configurations:
- *
- * * Database settings
- * * Secret keys
- * * Database table prefix
- * * ABSPATH
- *
- * @link https://wordpress.org/support/article/editing-wp-config-php/
- *
- * @package WordPress
- */
+FROM debian:buster
 
-// ** Database settings - You can get this info from your web host ** //
-/** The name of the database for WordPress */
-define( 'DB_NAME', 'wordpress_ddb' );
+RUN     apt-get -y update; \
+        apt-get -y upgrade; \
+        apt-get -y install  php php7.3-fpm php7.3-common php7.3-mysql php7.3-gmp php7.3-curl php7.3-intl php7.3-mbstring php7.3-xmlrpc \
+                            php7.3-cli php7.3-zip php7.3-soap php7.3-imap wget unzip mariadb-client;
 
-/** Database username */
-define( 'DB_USER', 'username_here' );
+RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 
-/** Database password */
-define( 'DB_PASSWORD', 'password_here' );
+RUN chmod +x wp-cli.phar
 
-/** Database hostname */
-define( 'DB_HOST', 'localhost' );
+RUN mv wp-cli.phar /usr/local/bin/wp
 
-/** Database charset to use in creating database tables. */
-define( 'DB_CHARSET', 'utf8' );
+COPY tools/www.conf /etc/php/7.3/fpm/pool.d/www.conf
 
-/** The database collate type. Don't change this if in doubt. */
-define( 'DB_COLLATE', '' );
+COPY tools/script.sh /script.sh
 
-/**#@+
+RUN chmod +x /script.sh
 
+EXPOSE 9000
+
+ENTRYPOINT ["bash", "/script.sh"]
+
+CMD ["php-fpm7.3", "-F"]
+
+
+
+
+
+service php7.3-fpm start
+
+if  ! wp core is-installed --allow-root;
+then
+
+        mkdir -p /var/www/html/cmarouf.42.fr
+
+        cd /var/www/html/cmarouf.42.fr
+
+        chown -R www-data:www-data /var/www/html/cmarouf.42.fr
+
+        wp core download --allow-root
+
+        cp wp-config-sample.php wp-config.php
+
+        sed -i "s/define( 'DB_NAME', '.*' );/define( 'DB_NAME', '$MYSQL_DDB_NAME' );/" wp-config.php
+        sed -i "s/define( 'DB_PASSWORD', '.*' );/define( 'DB_PASSWORD', '$MYSQL_PASSWORD' );/" wp-config.php
+        sed -i "s/define( 'DB_USER', '.*' );/define( 'DB_USER', '$MYSQL_USER' );/" wp-config.php
+        sed -i "s/define( 'DB_HOST', '.*' );/define( 'DB_HOST', 'mariadb' );/" wp-config.php
+
+        wp core install --url=cmarouf.42.fr --title=MyWordpress --admin_user=$WP_ADMIN_USER --admin_password=$WP_ADMIN_PASSWORD --allow-root
+        rm wp-config-sample.php
+
+        echo "OK"
+fi
+
+exec "$@"
