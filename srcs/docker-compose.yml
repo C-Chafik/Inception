@@ -7,7 +7,7 @@ services:
     ports:
       - 3306:3306
     volumes:
-      - "/home/kika75/data/db:/var/lib/mysql"
+      - data-base:/var/lib/mysql
     environment:
       MYSQL_DDB_NAME: $MYSQL_DDB_NAME
       MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
@@ -56,11 +56,11 @@ volumes:
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: '/home/kika75/data/wordpress'
+      device: '/home/cmarouf/data/wordpress'
   data-base:
     driver: local
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: '/home/kika75/data/db'
+      device: '/home/cmarouf/data/db'
 
