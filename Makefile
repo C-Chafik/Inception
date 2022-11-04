@@ -8,7 +8,6 @@ init:
 
 remove:
 	docker-compose -f ./srcs/docker-compose.yml down
-	#docker rm -f $(docker ps -aq)
 	sudo rm -rf /home/kika75/data
 	docker container prune -f
 run:
@@ -19,6 +18,6 @@ debug:
 
 stop:
 	docker-compose -f ./srcs/docker-compose.yml down
-	#docker rm -f $(docker ps -aq)
 
-.SILENT: stop init run remove
+.SILENT: stop init run remove debug
+.PHONY: stop init run remove debug
