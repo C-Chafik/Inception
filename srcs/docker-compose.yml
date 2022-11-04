@@ -1,4 +1,4 @@
-version: "3"
+version: "3.7"
 services:
   mariadb:
     image: mariadb_inception
@@ -24,7 +24,7 @@ services:
     networks:
       - frontend
     volumes:
-      - "/home/kika75/data/wordpress:/var/www/html"
+      - website:/var/www/html
   wordpress:
     image: wordpress_inception
     container_name: wordpress
@@ -34,7 +34,7 @@ services:
     ports:
       - 9000:9000
     volumes:
-      - "/home/kika75/data/wordpress:/var/www/html"
+      - website:/var/www/html
     environment:
       MYSQL_DDB_NAME: $MYSQL_DDB_NAME
       MYSQL_USER: $MYSQL_USER
@@ -50,3 +50,17 @@ services:
 networks:
   backend:
   frontend:
+volumes:
+  website:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/home/kika75/data/wordpress'
+  data-base:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/home/kika75/data/db'
+
