@@ -1,6 +1,24 @@
 
+init:
+	mkdir -p /home/kika75/data/wordpress
+	mkdir -p /home/kika75/data/db
+	docker build ./srcs/requirements/mariadb -t mariadb_inception
+	docker build ./srcs/requirements/nginx -t nginx_inception
+	docker build ./srcs/requirements/wordpress -t wordpress_inception
 
+remove:
+	docker-compose -f ./srcs/docker-compose.yml down
+	#docker rm -f $(docker ps -aq)
+	sudo rm -rf /home/kika75/data
+	docker container prune -f
+run:
+	docker-compose -f ./srcs/docker-compose.yml up -d 
 
-all:
+debug:
+	docker-compose -f ./srcs/docker-compose.yml up
 
-fclean:
+stop:
+	docker-compose -f ./srcs/docker-compose.yml down
+	#docker rm -f $(docker ps -aq)
+
+.SILENT: stop init run remove

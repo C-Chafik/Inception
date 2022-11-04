@@ -4,6 +4,7 @@
 
 if [ -d "/var/lib/mysql/$MYSQL_DDB_NAME" ]
 then
+	/usr/share/mysql/mysql.server start
 	echo "The DDB is already installed"	
 else
 
@@ -30,7 +31,9 @@ else
 	# Then we change root password
 	mysqladmin -u root password $MYSQL_ROOT_PASSWORD
 
-	mysqladmin -u root -p$MYSQL_ROOT_PASSWORD shutdown
+
 fi
+
+mysqladmin -u root -p$MYSQL_ROOT_PASSWORD shutdown
 
 exec "$@"
