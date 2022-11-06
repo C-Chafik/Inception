@@ -1,0 +1,66 @@
+version: "3.7"
+services:
+  mariadb:
+    image: mariadb_inception
+    container_name: mariadb
+    restart: always
+    ports:
+      - 3306:3306
+    volumes:
+      - data-base:/var/lib/mysql
+    environment:
+      MYSQL_DDB_NAME: $MYSQL_DDB_NAME
+      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+      MYSQL_USER: $MYSQL_USER
+      MYSQL_PASSWORD: $MYSQL_PASSWORD
+    networks:
+      - backend
+  nginx:
+    image: nginx_inception
+    container_name: nginx
+    restart: always
+    ports:
+      - 443:443
+    networks:
+      - frontend
+    volumes:
+      - website:/var/www/html
+  wordpress:
+    image: wordpress_inception
+    container_name: wordpress
+    depends_on: 
+     - mariadb
+    restart: always
+    ports:
+      - 9000:9000
+    volumes:
+      - website:/var/www/html
+    environment:
+      MYSQL_DDB_NAME: $MYSQL_DDB_NAME
+      MYSQL_USER: $MYSQL_USER
+      MYSQL_PASSWORD: $MYSQL_PASSWORD
+      WP_ADMIN_USER: $WP_ADMIN_USER
+      WP_ADMIN_PASSWORD: $WP_ADMIN_PASSWORD
+      DB_HOST: $DB_HOST
+      WP_ADMIN_EMAIL: $WP_ADMIN_EMAIL
+    networks:
+      - frontend
+      - backend
+
+networks:
+  backend:
+  frontend:
+volumes:
+  website:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/home/cmarouf/data/wordpress'
+  data-base:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/home/cmarouf/data/db'
+
