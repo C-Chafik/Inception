@@ -56,11 +56,11 @@ volumes:
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: '/home/cmarouf/data/wordpress'
+      device: "/home/$USER/data/wordpress"
   data-base:
     driver: local
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: '/home/cmarouf/data/db'
+      device: "/home/$USER/data/db"
 
