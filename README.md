@@ -9,5 +9,6 @@ Il faut faire fonctionner le loopback dans le container wordpress (Importer le D
 
 Paufiner encore le Makefile
 
+Ajouter le tag perso sur les images pour enlever le latest | DONE
+Avoir qu'un seul network
 C'est le minimum a faire pour avoir les bonne base de docker avant k8s
-

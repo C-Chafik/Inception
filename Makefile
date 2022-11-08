@@ -7,9 +7,9 @@
 	mkdir -p $$DDB
 
 .build: .init
-	docker build ./srcs/requirements/mariadb -t mariadb_inception
-	docker build ./srcs/requirements/nginx -t nginx_inception
-	docker build ./srcs/requirements/wordpress -t wordpress_inception
+	docker build ./srcs/requirements/mariadb -t mariadb:inception
+	docker build ./srcs/requirements/nginx -t nginx:inception
+	docker build ./srcs/requirements/wordpress -t wordpress:inception
 
 run: .build
 	docker-compose -f ./srcs/docker-compose.yml up -d 

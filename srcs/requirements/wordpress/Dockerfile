@@ -17,8 +17,6 @@ COPY tools/script.sh /script.sh
 
 RUN chmod +x /script.sh
 
-EXPOSE 9000
-
 ENTRYPOINT ["bash", "/script.sh"]
 
 CMD ["php-fpm7.3", "-F"]
