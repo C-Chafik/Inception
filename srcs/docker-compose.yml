@@ -22,7 +22,9 @@ services:
     volumes:
       - website:/var/www/html
     networks:
-      - network
+      network:
+        aliases:
+          - "cmarouf.42.fr"
   wordpress:
     image: wordpress:inception
     container_name: wordpress
@@ -47,6 +49,7 @@ services:
 
 networks:
   network:
+
 
 volumes:
   website:
