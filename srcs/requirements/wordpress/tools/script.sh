@@ -13,8 +13,6 @@ service php7.3-fpm start
 if  ! wp core is-installed --path=/var/www/html/cmarouf.42.fr --allow-root; 
 then
 
-	echo "127.0.0.1        cmarouf.42.fr" >> /etc/hosts
-
 	mkdir -p /var/www/html/cmarouf.42.fr
 
 	cd /var/www/html/cmarouf.42.fr

@@ -19,10 +19,10 @@ services:
     restart: always
     ports:
       - 443:443
-    networks:
-      - network
     volumes:
       - website:/var/www/html
+    networks:
+      - network
   wordpress:
     image: wordpress:inception
     container_name: wordpress

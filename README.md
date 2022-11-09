@@ -4,7 +4,7 @@ TODO LIST
 Le port 443 doit etre le seul point d'entree de l'infrastructure | DONE
 Il manque le deuxieme user dans le container wordpress | DONE
 Ajouter le tag perso sur les images pour enlever le latest | DONE
-Avoir qu'un seul network | EN COURS
+Avoir qu'un seul network | DONE
 
 Rendre le projet fonctionnelle sur Windows
 Paufiner encore le Makefile
