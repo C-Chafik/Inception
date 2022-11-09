@@ -12,7 +12,7 @@ services:
       MYSQL_USER: $MYSQL_USER
       MYSQL_PASSWORD: $MYSQL_PASSWORD
     networks:
-      - backend
+      - network
   nginx:
     image: nginx:inception
     container_name: nginx
@@ -20,7 +20,7 @@ services:
     ports:
       - 443:443
     networks:
-      - frontend
+      - network
     volumes:
       - website:/var/www/html
   wordpress:
@@ -43,12 +43,11 @@ services:
       WP_USER_PASSWORD: $WP_USER_PASSWORD
       WP_USER_EMAIL: $WP_USER_EMAIL
     networks:
-      - frontend
-      - backend
+      - network
 
 networks:
-  backend:
-  frontend:
+  network:
+
 volumes:
   website:
     driver: local

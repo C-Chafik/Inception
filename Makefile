@@ -11,7 +11,7 @@
 	docker build ./srcs/requirements/nginx -t nginx:inception
 	docker build ./srcs/requirements/wordpress -t wordpress:inception
 
-run: .build
+all: .build
 	docker-compose -f ./srcs/docker-compose.yml up -d 
 
 debug: .build
@@ -19,6 +19,9 @@ debug: .build
 
 stop:
 	docker-compose -f ./srcs/docker-compose.yml down
+
+run:
+	docker-compose -f ./srcs/docker-compose.yml up -d 
 
 remove: stop
 	sudo rm -rf /home/cmarouf/data
