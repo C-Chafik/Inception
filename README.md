@@ -10,7 +10,8 @@ The goal is to construct a webserver with handmade images, including a data-base
 The infrastructure must be a look-like of this picture.
 
 
-![Infrastructure](https://user-images.githubusercontent.com/76008303/201162614-d3660e52-dac1-4e47-82dc-95dff4726862.png)
+![Infrastructure](https://user-images.githubusercontent.com/76008303/201163220-f5534702-cc4d-444b-9764-ccec1bc861f9.png)
+
 
 You can access the infrastructure from the port 443 only.
 
