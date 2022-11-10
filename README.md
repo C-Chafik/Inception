@@ -21,7 +21,7 @@ You will need root privilege to run this project
 
 Edit the envfiles with the right HOST_USER you are currently using
 
-You will also need to add the hostname ```cmarouf.42.fr``` to ```127.0.0.1```
+You will also need to add the hostname ```cmarouf.42.fr``` to ```127.0.0.1```.
 or just ```sudo make domain``` Optionnal.
 
 ----
@@ -52,3 +52,9 @@ Debugging
 make debug (Will launch docker-compose without the detached mode)
 make rebuild (Will rebuild the images without deleting the data-base)
 ```
+
+When the containers are up, just log to the website using ```localhost:443``` or the domain name ```cmarouf.42.fr```.
+
+Administrator username and password are in ```srcs/.env```.
+
+Link to the administrator pannel ```https://cmarouf.42.fr/wp-admin```.
