@@ -7,6 +7,13 @@ Subject : [en.subject.pdf](https://github.com/C-Chafik/Inception/files/9983179/e
 
 The goal is to construct a webserver with handmade images, including a data-base, an https server, and a wordpress, in order to learn docker, docker-compose.
 
+The infrastructure must be a look-like of this picture.
+
+
+![Infrastructure](https://user-images.githubusercontent.com/76008303/201162614-d3660e52-dac1-4e47-82dc-95dff4726862.png)
+
+You can access the infrastructure from the port 443 only.
+
 ## Usage
 
 You will need root privilege to run this project
