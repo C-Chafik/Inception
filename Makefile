@@ -1,35 +1,39 @@
+#!make
+
+include envfile
+export $(shell sed 's/=.*//' envfile)
+
+WB_SITE=/home/$(DOCKER_USER)/data/wordpress
+DDB=/home/$(DOCKER_USER)/data/db
+
 .init:
-	@echo "Please enter your current home directory name EX /home/?USER?"; \
-	read USER; \
-	DDB=/home/$$USER/data/db; \
-	WB_SITE=/home/$$USER/data/wordpress; \
-	mkdir -p $$WB_SITE; \
-	mkdir -p $$DDB
+	@if [ ! -d "/home/$(DOCKER_USER)/data" ]; then \
+		mkdir -p $(WB_SITE); \
+		mkdir -p $(DDB); \
+		docker build ./srcs/requirements/mariadb -t mariadb:inception; \
+		docker build ./srcs/requirements/nginx -t nginx:inception; \
+		docker build ./srcs/requirements/wordpress -t wordpress:inception; \
+	fi
 
-.build: .init
-	docker build ./srcs/requirements/mariadb -t mariadb:inception
-	docker build ./srcs/requirements/nginx -t nginx:inception
-	docker build ./srcs/requirements/wordpress -t wordpress:inception
+all: .init
+	docker-compose --env-file ./srcs/.env -f ./srcs/docker-compose.yml up -d 
 
-all: .build
-	docker-compose -f ./srcs/docker-compose.yml up -d 
-
-debug: .build
-	docker-compose -f ./srcs/docker-compose.yml up
+debug: .init
+	docker-compose --env-file ./srcs/.env -f ./srcs/docker-compose.yml up
 
 stop:
-	docker-compose -f ./srcs/docker-compose.yml down
+	docker-compose  --env-file ./srcs/.env -f ./srcs/docker-compose.yml down
 
-run:
-	docker-compose -f ./srcs/docker-compose.yml up -d 
+resume: .init
+	docker-compose  --env-file ./srcs/.env -f ./srcs/docker-compose.yml up -d 
 
 remove: stop
-	sudo rm -rf /home/cmarouf/data
-	docker stop $(shell docker ps -aq); \
-	docker rm -f $(shell docker ps -aq); \
-	docker rmi -f $(shell docker images -aq); \
-	docker volume rm $(shell docker volume ls -q); \
-	docker network rm $(shell docker network ls -q)
+	sudo rm -rf /home/$(DOCKER_USER)/data/
+	docker volume rm -f srcs_data-base; \
+	docker volume rm -f srcs_website; \
+	docker image rm wordpress:inception; \
+	docker image rm mariadb:inception; \
+	docker image rm nginx:inception
 
 .SILENT: remove
 
