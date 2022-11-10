@@ -3,9 +3,6 @@
 until mysql -s --host=mariadb -u$MYSQL_USER -p$MYSQL_PASSWORD -e "\c"
 do
 	echo "Waiting for $MYSQL_DDB_NAME to be running...."
-	echo "$MYSQL_USER is up !"
-	echo "$MYSQL_PASSWORD is up !"
-	echo "$DB_HOST is up !"
 	sleep 1;
 done
 

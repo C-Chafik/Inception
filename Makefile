@@ -15,11 +15,17 @@ DDB=/home/$(HOST_USER)/data/db
 		docker build ./srcs/requirements/wordpress -t wordpress:inception; \
 	fi
 
+
 all: .init
 	docker-compose --env-file ./srcs/.env -f ./srcs/docker-compose.yml up -d 
 
 domain:
 	echo "127.0.0.1\tcmarouf.42.fr" >> /etc/hosts
+
+rebuild:
+	docker build ./srcs/requirements/mariadb -t mariadb:inception
+	docker build ./srcs/requirements/nginx -t nginx:inception
+	docker build ./srcs/requirements/wordpress -t wordpress:inception
 
 debug: .init
 	docker-compose --env-file ./srcs/.env -f ./srcs/docker-compose.yml up
