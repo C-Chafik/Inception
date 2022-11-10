@@ -3,7 +3,7 @@
 
 ## About the project
 
-Subject : 
+Subject : [en.subject.pdf](https://github.com/C-Chafik/Inception/files/9983179/en.subject.pdf)
 
 The goal is to construct a webserver with handmade images, including a data-base, an https server, and a wordpress, in order to learn docker, docker-compose.
 
@@ -32,4 +32,15 @@ make stop
 Resume the containers
 ```
 make resume
+```
+
+Wiping the project (This will delete the data-base and delete images)
+```
+make remove
+```
+
+Debugging
+```
+make debug (Will launch docker-compose without the detached mode)
+make rebuild (Will rebuild the images without deleting the data-base)
 ```
